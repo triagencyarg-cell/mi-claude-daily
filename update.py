@@ -5,7 +5,7 @@ def get_posts():
     # Hacker News API - no bloquea GitHub Actions
     url = "https://hacker-news.firebaseio.com/topstories.json"
     r = requests.get(url, timeout=15)
-    ids = r.json()[:8]
+   ids = list(r.json())[:8]
     
     posts = []
     for id in ids:
