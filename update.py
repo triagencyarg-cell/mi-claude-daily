@@ -2,11 +2,9 @@ import requests
 from datetime import datetime
 
 def get_posts():
-    # Hacker News API - no bloquea GitHub Actions
     url = "https://hacker-news.firebaseio.com/topstories.json"
     r = requests.get(url, timeout=15)
-   ids = list(r.json())[:8]
-    
+    ids = list(r.json())[:8]
     posts = []
     for id in ids:
         item = requests.get(f"https://hacker-news.firebaseio.com/item/{id}.json", timeout=10).json()
@@ -26,7 +24,7 @@ def generate_html(posts):
             <a href="{url}" target="_blank">
                 <h3>{titulo}</h3>
             </a>
-            <span>⬆ {score} puntos · Hacker News</span>
+            <span>&#11014; {score} puntos · Hacker News</span>
         </div>
         """
     return f"""<!DOCTYPE html>
