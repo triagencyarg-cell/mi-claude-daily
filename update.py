@@ -1,30 +1,32 @@
 import requests
 from datetime import datetime
 
-def get_reddit_posts():
-    headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; ClaudeDaily/1.0; +https://github.com)",
-        "Accept": "application/json",
-    }
-    url = "https://www.reddit.com/r/ClaudeAI/hot.json?limit=8&raw_json=1"
-    r = requests.get(url, headers=headers, timeout=15)
-    print(f"Status: {r.status_code}")
-    print(f"Response: {r.text[:200]}")
-    data = r.json()
-    posts = data["data"]["children"]
-    return [p["data"] for p in posts]
+def get_posts():
+    # Hacker News API - no bloquea GitHub Actions
+    url = "https://hacker-news.firebaseio.com/topstories.json"
+    r = requests.get(url, timeout=15)
+    ids = r.json()[:8]
+    
+    posts = []
+    for id in ids:
+        item = requests.get(f"https://hacker-news.firebaseio.com/item/{id}.json", timeout=10).json()
+        if item and item.get("title"):
+            posts.append(item)
+    return posts
 
 def generate_html(posts):
     fecha = datetime.now().strftime("%d %b %Y")
     items = ""
     for p in posts:
-        titulo = p['title'].replace('<', '&lt;').replace('>', '&gt;')
+        titulo = p.get('title', '').replace('<', '&lt;').replace('>', '&gt;')
+        url = p.get('url', f"https://news.ycombinator.com/item?id={p['id']}")
+        score = p.get('score', 0)
         items += f"""
         <div class="post-card">
-            <a href="https://reddit.com{p['permalink']}" target="_blank">
+            <a href="{url}" target="_blank">
                 <h3>{titulo}</h3>
             </a>
-            <span>⬆ {p['score']} upvotes · r/ClaudeAI</span>
+            <span>⬆ {score} puntos · Hacker News</span>
         </div>
         """
     return f"""<!DOCTYPE html>
@@ -50,11 +52,11 @@ def generate_html(posts):
 </html>"""
 
 try:
-    posts = get_reddit_posts()
+    posts = get_posts()
     html = generate_html(posts)
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html)
-    print("index.html generado OK")
+    print(f"OK - {len(posts)} posts generados")
 except Exception as e:
     print(f"Error: {e}")
     raise
