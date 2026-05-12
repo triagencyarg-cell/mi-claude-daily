@@ -3,386 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA Daily — Noticias de inteligencia artificial</title>
+    <title>IA Daily - Noticias y tips de inteligencia artificial</title>
+    <meta name="description" content="Las mejores noticias de IA, Claude y ChatGPT. Tips prácticos y casos de uso reales. Actualizado cada día.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
     <style>
         :root {
-            --negro: #0a0a0a;
-            --blanco: #fafaf7;
-            --acento: #d4380d;
-            --gris: #6b6b6b;
-            --gris-claro: #e8e8e4;
-            --card-bg: #ffffff;
+            --negro:#0f0f0f; --blanco:#f8f7f3; --acento:#c8310a;
+            --acento2:#1a6b3c; --gris:#6a6a6a; --gris-claro:#e5e4df;
         }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Source Serif 4',Georgia,serif;background:var(--blanco);color:var(--negro);min-height:100vh;}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        header{border-bottom:3px solid var(--negro);padding:0 40px;position:sticky;top:0;background:var(--blanco);z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+        .header-top{display:flex;align-items:center;justify-content:space-between;padding:16px 0 12px;border-bottom:1px solid var(--gris-claro);}
+        .logo{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;letter-spacing:-1.5px;color:var(--negro);text-decoration:none;}
+        .logo em{color:var(--acento);font-style:normal;}
+        .header-right{display:flex;align-items:center;gap:16px;}
+        .badge{background:var(--negro);color:var(--blanco);font-size:0.65rem;padding:4px 10px;letter-spacing:2px;text-transform:uppercase;}
+        .fecha-header{font-size:0.75rem;color:var(--gris);text-transform:uppercase;letter-spacing:2px;}
 
-        body {
-            font-family: 'Source Serif 4', Georgia, serif;
-            background: var(--blanco);
-            color: var(--negro);
-            min-height: 100vh;
-        }
+        .filtros-wrap{display:flex;gap:6px;padding:10px 0;overflow-x:auto;scrollbar-width:none;}
+        .filtros-wrap::-webkit-scrollbar{display:none;}
+        .filtro{font-family:'Source Serif 4',serif;font-size:0.75rem;padding:5px 16px;border:1.5px solid var(--negro);background:transparent;cursor:pointer;white-space:nowrap;transition:all 0.15s;letter-spacing:0.5px;}
+        .filtro:hover,.filtro.active{background:var(--negro);color:var(--blanco);}
 
-        /* HEADER */
-        header {
-            border-bottom: 3px solid var(--negro);
-            padding: 0 40px;
-            position: sticky;
-            top: 0;
-            background: var(--blanco);
-            z-index: 100;
-        }
+        .container{max-width:780px;margin:0 auto;padding:36px 24px 80px;}
+        .seccion-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:4px;color:var(--gris);margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid var(--gris-claro);}
 
-        .header-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 0 14px;
-            border-bottom: 1px solid var(--gris-claro);
-        }
+        .stat-bar{display:flex;gap:32px;padding:20px 0;border-bottom:3px solid var(--negro);margin-bottom:28px;}
+        .stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--acento);line-height:1;}
+        .stat-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--gris);margin-top:4px;}
 
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.9rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            color: var(--negro);
-            text-decoration: none;
-        }
+        .card{padding:22px 0;border-bottom:1px solid var(--gris-claro);animation:fadeUp 0.4s both;}
+        .card.oculta{display:none;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .card-tag{font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;}
+        .card-noticia .card-tag{color:var(--acento);}
+        .card-tip .card-tag{color:var(--acento2);}
+        .card h2{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;line-height:1.35;margin-bottom:10px;}
+        .card-noticia a{text-decoration:none;color:inherit;}
+        .card-noticia h2{transition:color 0.15s;}
+        .card-noticia h2:hover{color:var(--acento);}
+        .card-body{font-size:0.92rem;line-height:1.7;color:#333;margin-top:6px;font-weight:300;}
+        .card-meta{display:flex;align-items:center;gap:14px;font-size:0.75rem;color:var(--gris);margin-top:10px;}
+        .src-link{color:var(--acento)!important;text-decoration:none;margin-left:auto;font-size:0.73rem;}
+        .src-link:hover{text-decoration:underline;}
+        .empty{color:var(--gris);font-style:italic;padding:40px 0;text-align:center;}
+        footer{text-align:center;padding:28px;font-size:0.72rem;color:var(--gris);border-top:1px solid var(--gris-claro);letter-spacing:1px;}
 
-        .logo span { color: var(--acento); }
-
-        .fecha-header {
-            font-size: 0.8rem;
-            color: var(--gris);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* FILTROS */
-        .filtros-wrap {
-            display: flex;
-            gap: 4px;
-            padding: 12px 0;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .filtros-wrap::-webkit-scrollbar { display: none; }
-
-        .filtro {
-            font-family: 'Source Serif 4', serif;
-            font-size: 0.78rem;
-            padding: 5px 14px;
-            border: 1.5px solid var(--negro);
-            background: transparent;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.15s;
-            letter-spacing: 0.5px;
-        }
-
-        .filtro:hover, .filtro.active {
-            background: var(--negro);
-            color: var(--blanco);
-        }
-
-        /* MAIN */
-        main {
-            max-width: 860px;
-            margin: 0 auto;
-            padding: 40px 24px 80px;
-        }
-
-        .seccion-titulo {
-            font-family: 'Playfair Display', serif;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--gris);
-            margin-bottom: 24px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--gris-claro);
-        }
-
-        /* CARDS */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0;
-        }
-
-        .card {
-            padding: 24px 0;
-            border-bottom: 1px solid var(--gris-claro);
-            animation: fadeUp 0.4s both;
-            transition: opacity 0.2s;
-        }
-
-        .card.oculta {
-            display: none;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card-tag {
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--acento);
-            font-weight: 400;
-            margin-bottom: 8px;
-        }
-
-        .card a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .card h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            line-height: 1.35;
-            margin-bottom: 12px;
-            transition: color 0.15s;
-        }
-
-        .card h2:hover { color: var(--acento); }
-
-        .card-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 0.78rem;
-            color: var(--gris);
-        }
-
-        .hn-link {
-            color: var(--acento) !important;
-            font-size: 0.75rem;
-            text-decoration: none;
-            margin-left: auto;
-        }
-
-        .hn-link:hover { text-decoration: underline; }
-
-        .empty {
-            color: var(--gris);
-            font-style: italic;
-            padding: 40px 0;
-            text-align: center;
-        }
-
-        /* FOOTER */
-        footer {
-            text-align: center;
-            padding: 30px;
-            font-size: 0.75rem;
-            color: var(--gris);
-            border-top: 1px solid var(--gris-claro);
-            letter-spacing: 1px;
-        }
-
-        @media (max-width: 600px) {
-            header { padding: 0 16px; }
-            main { padding: 24px 16px 60px; }
-            .logo { font-size: 1.4rem; }
-            .card h2 { font-size: 1.05rem; }
+        @media(max-width:600px){
+            header{padding:0 16px;}
+            .container{padding:20px 16px 60px;}
+            .logo{font-size:1.5rem;}
+            .card h2{font-size:1.05rem;}
+            .stat-bar{gap:16px;}
+            .stat-num{font-size:1.6rem;}
         }
     </style>
 </head>
 <body>
-
 <header>
     <div class="header-top">
-        <a class="logo" href="#">IA<span>Daily</span></a>
-        <span class="fecha-header">12 May 2026</span>
+        <a class="logo" href="#">IA<em>Daily</em></a>
+        <div class="header-right">
+            <span class="badge">Auto-actualizado</span>
+            <span class="fecha-header">12 May 2026</span>
+        </div>
     </div>
     <div class="filtros-wrap">
-        <button class="filtro active" data-cat="todos">Todos</button><button class="filtro" data-cat="Claude & Anthropic">Claude & Anthropic</button><button class="filtro" data-cat="IA General">IA General</button><button class="filtro" data-cat="Modelos & LLMs">Modelos & LLMs</button>
+        <button class="filtro active" data-cat="todos">&#127775; Todo</button>
+        <button class="filtro" data-cat="noticias">&#128240; Noticias</button>
+        <button class="filtro" data-cat="tips">&#128161; Tips & Casos de uso</button>
     </div>
 </header>
 
-<main>
-    <p class="seccion-titulo">Noticias destacadas de inteligencia artificial</p>
-    <div class="grid" id="grid">
-        
-        <article class="card" data-cat="Claude & Anthropic" style="animation-delay: 0.0s">
-            <div class="card-tag">Claude & Anthropic</div>
-            <a href="https://claude.com/blog/claude-platform-on-aws" target="_blank" rel="noopener">
-                <h2>Claude Platform on AWS</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 82</span>
-                <span>&#128172; 40</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48103042" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="IA General" style="animation-delay: 0.05s">
-            <div class="card-tag">IA General</div>
-            <a href="https://medium.com/@NMitchem/if-ai-writes-your-code-why-use-python-bf8c4ba1a055" target="_blank" rel="noopener">
-                <h2>If AI writes your code, why use Python?</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 313</span>
-                <span>&#128172; 317</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48100433" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="IA General" style="animation-delay: 0.1s">
-            <div class="card-tag">IA General</div>
-            <a href="https://martin.sh/i-let-ai-build-a-tool-to-help-me-figure-out-what-was-waking-me-up-at-night/" target="_blank" rel="noopener">
-                <h2>I let AI build a tool to help me figure out what was waking me up at night</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 117</span>
-                <span>&#128172; 129</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48100662" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="IA General" style="animation-delay: 0.15000000000000002s">
-            <div class="card-tag">IA General</div>
-            <a href="https://www.nytimes.com/2026/05/11/us/politics/google-hackers-attack-ai.html" target="_blank" rel="noopener">
-                <h2>Google says criminal hackers used AI to find a major software flaw</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 144</span>
-                <span>&#128172; 110</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48094641" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="Modelos & LLMs" style="animation-delay: 0.2s">
-            <div class="card-tag">Modelos & LLMs</div>
-            <a href="https://www.cocoawithlove.com/blog/matrix-multiplications-swift.html" target="_blank" rel="noopener">
-                <h2>Training an LLM in Swift, Part 1: Taking matrix mult from Gflop/s to Tflop/s</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 225</span>
-                <span>&#128172; 11</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48085685" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="IA General" style="animation-delay: 0.25s">
-            <div class="card-tag">IA General</div>
-            <a href="https://bild.ai/jobs" target="_blank" rel="noopener">
-                <h2>Bild AI (YC W25) Is Hiring Founding Product Engineers</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 1</span>
-                <span>&#128172; 0</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48098122" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="Modelos & LLMs" style="animation-delay: 0.30000000000000004s">
-            <div class="card-tag">Modelos & LLMs</div>
-            <a href="https://duarteocarmo.com/blog/amalia-and-the-future-of-european-portuguese-llms" target="_blank" rel="noopener">
-                <h2>AMÁLIA and the future of European Portuguese LLMs</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 124</span>
-                <span>&#128172; 57</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48065429" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="IA General" style="animation-delay: 0.35000000000000003s">
-            <div class="card-tag">IA General</div>
-            <a href="https://unix.foo/posts/local-ai-needs-to-be-norm/" target="_blank" rel="noopener">
-                <h2>Local AI needs to be the norm</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 1782</span>
-                <span>&#128172; 706</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48085821" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="IA General" style="animation-delay: 0.4s">
-            <div class="card-tag">IA General</div>
-            <a href="https://github.com/Mnexa-AI/e2a" target="_blank" rel="noopener">
-                <h2>Show HN: E2a – Open-source email gateway for AI agents</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 30</span>
-                <span>&#128172; 3</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48100227" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="IA General" style="animation-delay: 0.45s">
-            <div class="card-tag">IA General</div>
-            <a href="https://www.devas.life/what-a-japanese-cooking-principle-taught-me-about-overcoming-ai-fatigue/" target="_blank" rel="noopener">
-                <h2>What a Japanese cooking principle taught me about overcoming AI fatigue</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 55</span>
-                <span>&#128172; 1</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48093466" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="Modelos & LLMs" style="animation-delay: 0.5s">
-            <div class="card-tag">Modelos & LLMs</div>
-            <a href="https://novaberg.de/papers/clipboard-pattern.html" target="_blank" rel="noopener">
-                <h2>Natural-language messages between LLM agents are an architectural anti-pattern</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 16</span>
-                <span>&#128172; 2</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48099171" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
-        <article class="card" data-cat="IA General" style="animation-delay: 0.55s">
-            <div class="card-tag">IA General</div>
-            <a href="https://www.jamesshore.com/v2/blog/2026/you-need-ai-that-reduces-your-maintenance-costs" target="_blank" rel="noopener">
-                <h2>An AI coding agent, used to write code, needs to reduce your maintenance costs</h2>
-            </a>
-            <div class="card-meta">
-                <span>&#11014; 353</span>
-                <span>&#128172; 101</span>
-                <a class="hn-link" href="https://news.ycombinator.com/item?id=48089289" target="_blank">Ver en HN</a>
-            </div>
-        </article>
-        
+<div class="container">
+    <div class="stat-bar">
+        <div class="stat"><div class="stat-num">14</div><div class="stat-label">Noticias hoy</div></div>
+        <div class="stat"><div class="stat-num">3</div><div class="stat-label">Tips del día</div></div>
+        <div class="stat"><div class="stat-num">17</div><div class="stat-label">Total</div></div>
     </div>
-</main>
+    <p class="seccion-label">Inteligencia artificial &mdash; 12 May 2026</p>
+    <div id="grid">
+    <article class="card card-tip" data-cat="tips" style="animation-delay:0.00s">
+        <div class="card-tag">📚 Aprendizaje</div>
+        <h2>Creá un plan de estudio personalizado</h2>
+        <p class="card-body">Escribí: 'Quiero aprender [tema] en [X semanas], tengo [X horas] por semana y ya sé [conocimiento previo]. Haceme un plan de estudio día por día con recursos gratuitos.' Claude lo arma como un tutor personal.</p>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.06s">
+        <div class="card-tag">&#128240; Hacker News</div>
+        <a href="https://claude.com/blog/claude-platform-on-aws" target="_blank" rel="noopener"><h2>Claude Platform on AWS</h2></a>
+        <div class="card-meta"><span>&#11014; 88</span><span>&#128172; 43</span><a class="src-link" href="https://claude.com/blog/claude-platform-on-aws" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.12s">
+        <div class="card-tag">&#128240; Hacker News</div>
+        <a href="https://medium.com/@NMitchem/if-ai-writes-your-code-why-use-python-bf8c4ba1a055" target="_blank" rel="noopener"><h2>If AI writes your code, why use Python?</h2></a>
+        <div class="card-meta"><span>&#11014; 321</span><span>&#128172; 328</span><a class="src-link" href="https://medium.com/@NMitchem/if-ai-writes-your-code-why-use-python-bf8c4ba1a055" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.18s">
+        <div class="card-tag">&#128240; Hacker News</div>
+        <a href="https://martin.sh/i-let-ai-build-a-tool-to-help-me-figure-out-what-was-waking-me-up-at-night/" target="_blank" rel="noopener"><h2>I let AI build a tool to help me figure out what was waking me up at night</h2></a>
+        <div class="card-meta"><span>&#11014; 117</span><span>&#128172; 131</span><a class="src-link" href="https://martin.sh/i-let-ai-build-a-tool-to-help-me-figure-out-what-was-waking-me-up-at-night/" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.24s">
+        <div class="card-tag">&#128240; Hacker News</div>
+        <a href="https://www.nytimes.com/2026/05/11/us/politics/google-hackers-attack-ai.html" target="_blank" rel="noopener"><h2>Google says criminal hackers used AI to find a major software flaw</h2></a>
+        <div class="card-meta"><span>&#11014; 145</span><span>&#128172; 111</span><a class="src-link" href="https://www.nytimes.com/2026/05/11/us/politics/google-hackers-attack-ai.html" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.30s">
+        <div class="card-tag">&#128240; Hacker News</div>
+        <a href="https://www.cocoawithlove.com/blog/matrix-multiplications-swift.html" target="_blank" rel="noopener"><h2>Training an LLM in Swift, Part 1: Taking matrix mult from Gflop/s to Tflop/s</h2></a>
+        <div class="card-meta"><span>&#11014; 227</span><span>&#128172; 11</span><a class="src-link" href="https://www.cocoawithlove.com/blog/matrix-multiplications-swift.html" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.36s">
+        <div class="card-tag">&#128240; Hacker News</div>
+        <a href="https://bild.ai/jobs" target="_blank" rel="noopener"><h2>Bild AI (YC W25) Is Hiring Founding Product Engineers</h2></a>
+        <div class="card-meta"><span>&#11014; 1</span><span>&#128172; 0</span><a class="src-link" href="https://bild.ai/jobs" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.42s">
+        <div class="card-tag">&#128240; Hacker News</div>
+        <a href="https://duarteocarmo.com/blog/amalia-and-the-future-of-european-portuguese-llms" target="_blank" rel="noopener"><h2>AMÁLIA and the future of European Portuguese LLMs</h2></a>
+        <div class="card-meta"><span>&#11014; 124</span><span>&#128172; 58</span><a class="src-link" href="https://duarteocarmo.com/blog/amalia-and-the-future-of-european-portuguese-llms" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.48s">
+        <div class="card-tag">&#128240; Hacker News</div>
+        <a href="https://unix.foo/posts/local-ai-needs-to-be-norm/" target="_blank" rel="noopener"><h2>Local AI needs to be the norm</h2></a>
+        <div class="card-meta"><span>&#11014; 1786</span><span>&#128172; 711</span><a class="src-link" href="https://unix.foo/posts/local-ai-needs-to-be-norm/" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.54s">
+        <div class="card-tag">&#128240; MIT Tech Review</div>
+        <a href="https://www.technologyreview.com/2026/05/11/1137090/three-things-in-ai-to-watch-according-to-a-nobel-winning-economist/" target="_blank" rel="noopener"><h2>Three things in AI to watch, according to a Nobel-winning economist</h2></a>
+        <div class="card-meta"><a class="src-link" href="https://www.technologyreview.com/2026/05/11/1137090/three-things-in-ai-to-watch-according-to-a-nobel-winning-economist/" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.60s">
+        <div class="card-tag">&#128240; MIT Tech Review</div>
+        <a href="https://www.technologyreview.com/2026/05/11/1136967/fostering-breakthrough-ai-innovation-through-customer-back-engineering/" target="_blank" rel="noopener"><h2>Fostering breakthrough AI innovation through customer-back engineering</h2></a>
+        <div class="card-meta"><a class="src-link" href="https://www.technologyreview.com/2026/05/11/1136967/fostering-breakthrough-ai-innovation-through-customer-back-engineering/" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.66s">
+        <div class="card-tag">&#128240; MIT Tech Review</div>
+        <a href="https://www.technologyreview.com/2026/05/11/1136406/innovation-abounds-in-device-charging/" target="_blank" rel="noopener"><h2>Innovation abounds in device charging</h2></a>
+        <div class="card-meta"><a class="src-link" href="https://www.technologyreview.com/2026/05/11/1136406/innovation-abounds-in-device-charging/" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.72s">
+        <div class="card-tag">&#128240; MIT Tech Review</div>
+        <a href="https://www.technologyreview.com/2026/05/11/1136786/implementing-advanced-ai-technologies-in-finance/" target="_blank" rel="noopener"><h2>Implementing advanced AI technologies in finance</h2></a>
+        <div class="card-meta"><a class="src-link" href="https://www.technologyreview.com/2026/05/11/1136786/implementing-advanced-ai-technologies-in-finance/" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.78s">
+        <div class="card-tag">&#128240; VentureBeat AI</div>
+        <a href="https://venturebeat.com/infrastructure/railway-secures-usd100-million-to-challenge-aws-with-ai-native-cloud" target="_blank" rel="noopener"><h2>Railway secures $100 million to challenge AWS with AI-native cloud infrastructure</h2></a>
+        <div class="card-meta"><a class="src-link" href="https://venturebeat.com/infrastructure/railway-secures-usd100-million-to-challenge-aws-with-ai-native-cloud" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-noticia" data-cat="noticias" style="animation-delay:0.84s">
+        <div class="card-tag">&#128240; VentureBeat AI</div>
+        <a href="https://venturebeat.com/infrastructure/claude-code-costs-up-to-usd200-a-month-goose-does-the-same-thing-for-free" target="_blank" rel="noopener"><h2>Claude Code costs up to $200 a month. Goose does the same thing for free.</h2></a>
+        <div class="card-meta"><a class="src-link" href="https://venturebeat.com/infrastructure/claude-code-costs-up-to-usd200-a-month-goose-does-the-same-thing-for-free" target="_blank">Leer nota &#8599;</a></div>
+    </article>
+    <article class="card card-tip" data-cat="tips" style="animation-delay:0.90s">
+        <div class="card-tag">🎯 Tips de Claude</div>
+        <h2>El truco del ROL para mejores respuestas</h2>
+        <p class="card-body">El secreto para mejores respuestas: siempre incluí ROL + CONTEXTO + TAREA + FORMATO. Ejemplo: 'Actuá como nutricionista [ROL]. Soy adulto sin enfermedades [CONTEXTO]. Haceme un plan de comidas semanal [TAREA] en formato tabla [FORMATO].'</p>
+    </article>
+    <article class="card card-tip" data-cat="tips" style="animation-delay:0.96s">
+        <div class="card-tag">🌎 Contenido</div>
+        <h2>Traducí y adaptá contenido para Argentina</h2>
+        <p class="card-body">No solo traducís: pedile 'Traducí este texto al español rioplatense, adaptá las referencias culturales para Argentina y usá un tono cercano para redes sociales'. La diferencia es enorme.</p>
+    </article></div>
+</div>
 
-<footer>
-    IADAILY &mdash; Actualizado automáticamente cada día &mdash; Fuente: Hacker News
-</footer>
+<footer>IADAILY &mdash; Se actualiza automáticamente cada día &mdash; Fuentes: Hacker News &middot; The Verge &middot; MIT Tech Review</footer>
 
 <script>
-    const filtros = document.querySelectorAll('.filtro');
-    const cards = document.querySelectorAll('.card');
-
-    filtros.forEach(btn => {
+    document.querySelectorAll('.filtro').forEach(btn => {
         btn.addEventListener('click', () => {
-            filtros.forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.filtro').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             const cat = btn.dataset.cat;
-            cards.forEach(card => {
-                if (cat === 'todos' || card.dataset.cat === cat) {
-                    card.classList.remove('oculta');
-                } else {
-                    card.classList.add('oculta');
-                }
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.toggle('oculta', cat !== 'todos' && card.dataset.cat !== cat);
             });
         });
     });
 </script>
-
 </body>
 </html>
