@@ -2,20 +2,27 @@ import requests
 from datetime import datetime
 
 def get_reddit_posts():
-    headers = {"User-Agent": "ClaudeDaily/1.0"}
-    url = "https://www.reddit.com/r/ClaudeAI/hot.json?limit=8"
-    r = requests.get(url, headers=headers)
-    posts = r.json()["data"]["children"]
+    headers = {
+        "User-Agent": "Mozilla/5.0 (compatible; ClaudeDaily/1.0; +https://github.com)",
+        "Accept": "application/json",
+    }
+    url = "https://www.reddit.com/r/ClaudeAI/hot.json?limit=8&raw_json=1"
+    r = requests.get(url, headers=headers, timeout=15)
+    print(f"Status: {r.status_code}")
+    print(f"Response: {r.text[:200]}")
+    data = r.json()
+    posts = data["data"]["children"]
     return [p["data"] for p in posts]
 
 def generate_html(posts):
     fecha = datetime.now().strftime("%d %b %Y")
     items = ""
     for p in posts:
+        titulo = p['title'].replace('<', '&lt;').replace('>', '&gt;')
         items += f"""
         <div class="post-card">
             <a href="https://reddit.com{p['permalink']}" target="_blank">
-                <h3>{p['title']}</h3>
+                <h3>{titulo}</h3>
             </a>
             <span>⬆ {p['score']} upvotes · r/ClaudeAI</span>
         </div>
@@ -42,8 +49,12 @@ def generate_html(posts):
 </body>
 </html>"""
 
-posts = get_reddit_posts()
-html = generate_html(posts)
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html)
-print("index.html generado OK")
+try:
+    posts = get_reddit_posts()
+    html = generate_html(posts)
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(html)
+    print("index.html generado OK")
+except Exception as e:
+    print(f"Error: {e}")
+    raise
