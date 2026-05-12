@@ -4,12 +4,18 @@ from datetime import datetime
 def get_posts():
     url = "https://hacker-news.firebaseio.com/topstories.json"
     r = requests.get(url, timeout=15)
-    ids = list(r.json())[:8]
+    ids = r.json()
     posts = []
-    for id in ids:
-        item = requests.get(f"https://hacker-news.firebaseio.com/item/{id}.json", timeout=10).json()
-        if item and item.get("title"):
-            posts.append(item)
+    for id in ids[:20]:
+        try:
+            item_url = f"https://hacker-news.firebaseio.com/v0/item/{id}.json"
+            item = requests.get(item_url, timeout=10).json()
+            if item and isinstance(item, dict) and item.get("title") and item.get("type") == "story":
+                posts.append(item)
+            if len(posts) >= 8:
+                break
+        except:
+            continue
     return posts
 
 def generate_html(posts):
@@ -49,12 +55,9 @@ def generate_html(posts):
 </body>
 </html>"""
 
-try:
-    posts = get_posts()
-    html = generate_html(posts)
-    with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html)
-    print(f"OK - {len(posts)} posts generados")
-except Exception as e:
-    print(f"Error: {e}")
-    raise
+posts = get_posts()
+print(f"Posts encontrados: {len(posts)}")
+html = generate_html(posts)
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html)
+print("index.html generado OK")
